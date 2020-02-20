@@ -1,4 +1,4 @@
-angular.module('frontrello').factory('coreService',
+angular.module('frontend').factory('coreService',
 	
 		function($http, URL_BASE) {
 			return {

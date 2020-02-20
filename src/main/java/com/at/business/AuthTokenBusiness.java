@@ -11,6 +11,7 @@ import com.at.model.persistence.AuthTokenRespository;
 @Service
 public class AuthTokenBusiness implements IAuthTokenBusiness {
 
+
 	@Autowired
 	private AuthTokenRespository authTokenDAO;
 
@@ -43,7 +44,6 @@ public class AuthTokenBusiness implements IAuthTokenBusiness {
 		} catch (Exception e) {
 			throw new BusinessException(e);
 		}
-
 	}
 
 }

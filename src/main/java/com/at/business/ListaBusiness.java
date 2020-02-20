@@ -18,7 +18,7 @@ public class ListaBusiness implements IListaBusiness {
 	
 
 	@Override
-	public Lista load(long id) throws BusinessException, NotFoundException {
+	public Lista load(int id) throws BusinessException, NotFoundException {
 		Optional<Lista> o;
 		try {
 			o = listaDAO.findById(id);
@@ -35,7 +35,9 @@ public class ListaBusiness implements IListaBusiness {
 	public Lista add(Lista lista) throws BusinessException {
 
 		try {
+			listaDAO.refreshOnSave(lista.getTablero().getId(), lista.getPosicion());
 			return listaDAO.save(lista);
+			
 		} catch (Exception e) {
 			throw new BusinessException(e);
 		}
@@ -43,12 +45,12 @@ public class ListaBusiness implements IListaBusiness {
 	}
 
 	@Override
-	public void delete(long id) throws BusinessException {
+	public void delete(int id) throws BusinessException {
 		try {
 				Lista l = listaDAO.findById(id).get();
 				listaDAO.deleteById(id);
-			//	listaDAO.refresh(l.getTablero().getId(), l.getPosicion());
-
+				listaDAO.refreshOnDelete(l.getTablero().getId(), l.getPosicion());
+				
 		} catch (Exception e) {
 			throw new BusinessException(e);
 		}
@@ -73,4 +75,6 @@ public class ListaBusiness implements IListaBusiness {
 			throw new BusinessException(e);
 		}
 	}
+
+
 }

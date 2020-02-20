@@ -8,9 +8,11 @@ import org.springframework.stereotype.Repository;
 import com.at.model.Sprint;
 
 @Repository
-public interface SprintRepository extends JpaRepository<Sprint, Long>{
-
-			//List<Sprint> findbyList(int id);
+public interface SprintRepository extends JpaRepository<Sprint, Integer>{
 			
-			//List<Sprint>findbyIdSprint(int idSprint);
+		//	public List<Sprint>findByNombre(String Nombre);
+			
+		//	public List<Sprint> findByTablero_Nombre(int id_tablero, String nombre);
+			
+			
 }

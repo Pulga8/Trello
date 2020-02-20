@@ -1,4 +1,4 @@
-angular.module('frontrello')
+angular.module('frontend')
 .constant('URL_API_BASE', '/api/v1/')
 .constant('URL_BASE', '/')
 .constant('URL_WS', '/api/v1/ws')

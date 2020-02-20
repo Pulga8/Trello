@@ -138,7 +138,7 @@ public class CustomTokenAuthenticationFilter extends OncePerRequestFilter {
 			authTokenService.save(authToken);
 
 			String username = authToken.getUsername();
-			List<Usuario> lu = usuariosDAO.findByUsernameOrEmail(username, username);
+			List<Usuario> lu = usuariosDAO.findByUsername(username);
 			if(lu.size()==1) {
 				log.debug("Token para usuario "+lu.get(0).getUsername());
 				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(lu.get(0), null,lu.get(0).getAuthorities());

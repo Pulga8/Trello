@@ -16,7 +16,7 @@ public class SprintBusiness implements ISprintBusiness {
 	private SprintRepository sprintDAO;
 	
 	@Override
-	public Sprint load(long id) throws BusinessException, NotFoundException {
+	public Sprint load(int id) throws BusinessException, NotFoundException {
 		Optional<Sprint> o;
 		try {
 			o = sprintDAO.findById(id);
@@ -28,6 +28,8 @@ public class SprintBusiness implements ISprintBusiness {
 		else
 			throw new NotFoundException();
 	}
+	
+	
 
 	@Override
 	public Sprint add(Sprint sprint) throws BusinessException {
@@ -39,7 +41,7 @@ public class SprintBusiness implements ISprintBusiness {
 	}
 
 	@Override
-	public void delete(long id) throws BusinessException {
+	public void delete(int id) throws BusinessException {
 		try {
 			sprintDAO.deleteById(id);
 		} catch (Exception e) {

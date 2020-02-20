@@ -2,6 +2,8 @@ package com.at.web;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,83 +15,74 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.at.business.BusinessException;
 import com.at.business.IListaBusiness;
 import com.at.business.NotFoundException;
 import com.at.model.Lista;
 
-
 @RestController
 @RequestMapping(Constantes.URL_LISTA)
-public class ListaRestService extends BaseRestService{
+public class ListaRestService extends BaseRestService {
 
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private IListaBusiness listaBusiness;
 
-	@GetMapping("")
-	public ResponseEntity<List<Lista>> list(
-			@RequestParam(required = false, defaultValue = "@*@", value = "q") String parteDelNombre) {
-		try {
-			if (parteDelNombre.equals("@*@")) {
-				return new ResponseEntity<List<Lista>>(listaBusiness.list(), HttpStatus.OK);
-			} else {
-				return new ResponseEntity<List<Lista>>(listaBusiness.list(), HttpStatus.OK);
-			}
-		} catch (BusinessException e) {
-			return new ResponseEntity<List<Lista>>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	@GetMapping("/{id}")
-	public ResponseEntity<Lista> load(@PathVariable("id") long id) {
+	@GetMapping(Constantes.URL_LISTA + "/{id}")
+	public ResponseEntity<Lista> loadLista(@PathVariable("id") int id) {
 		try {
 			return new ResponseEntity<Lista>(listaBusiness.load(id), HttpStatus.OK);
 		} catch (BusinessException e) {
-			return new ResponseEntity<Lista>(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getLocalizedMessage(), e);
 		} catch (NotFoundException e) {
 			return new ResponseEntity<Lista>(HttpStatus.NOT_FOUND);
 		}
 	}
 
-	@PostMapping("")
-	public ResponseEntity<Lista> add(@RequestBody Lista lista) {
+	@PostMapping(Constantes.URL_LISTA)
+	public ResponseEntity<Lista> addLista(@RequestBody Lista lista) {
 		try {
 			listaBusiness.add(lista);
-			
+
 			HttpHeaders responseHeaders = new HttpHeaders();
 			responseHeaders.set("location", "/lista/" + lista.getId());
 			return new ResponseEntity<Lista>(responseHeaders, HttpStatus.CREATED);
 		} catch (BusinessException e) {
-			return new ResponseEntity<Lista>(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getLocalizedMessage(), e);
 		}
 	}
 
-	@PutMapping("")
-	public ResponseEntity<Lista> update(@RequestBody Lista lista) {
+	@PutMapping(Constantes.URL_LISTA)
+	public ResponseEntity<Lista> updateLista(@RequestBody Lista lista) {
 		try {
 			return new ResponseEntity<Lista>(listaBusiness.update(lista), HttpStatus.OK);
 		} catch (BusinessException e) {
-			return new ResponseEntity<Lista>(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getLocalizedMessage(), e);
 		}
 	}
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable("id") long id) {
+	@DeleteMapping(Constantes.URL_LISTA + "/{id}")
+	public ResponseEntity<String> deleteLista(@PathVariable("id") int id) {
 		try {
 			listaBusiness.delete(id);
 			return new ResponseEntity<String>(HttpStatus.OK);
 		} catch (BusinessException e) {
-			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+			log.error(e.getMessage(), e);
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getLocalizedMessage(), e);
+		}
+	}
+
+	@GetMapping(Constantes.URL_LIST_LISTAS)
+	public ResponseEntity<List<Lista>> listListas(@PathVariable("idTablero") int idTablero) {
+		try {
+			return new ResponseEntity<List<Lista>>(listaBusiness.list(), HttpStatus.OK);
+		} catch (BusinessException e) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getLocalizedMessage(), e);
 		}
 	}
 
 }
-
-
-
-
-

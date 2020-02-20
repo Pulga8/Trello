@@ -24,10 +24,15 @@ public class Tarea implements Serializable {
 	@Column(length = 150, nullable = false)
 	private String nombre;
 	
+
+    @Column(length = 10000)
+    private String descripcion;
+
+	
 	private Date fechaDeCreacion;
 	
 	
-	private String prioridad;
+	private int prioridad;
 	
 	private Date FechaDeUltimaModificacion;
 	@Column(columnDefinition = "tinyint(4) default '1'")
@@ -35,6 +40,10 @@ public class Tarea implements Serializable {
 	
 	private int idSprint;
 
+	
+	//GettersAndSetters
+	
+	
 	public int getIdTarea() {
 		return idTarea;
 	}
@@ -71,19 +80,33 @@ public class Tarea implements Serializable {
 		this.idSprint = idSprint;
 	}
 
-	public String getPrioridad() {
+	
+
+	public int getPrioridad() {
 		return prioridad;
 	}
 
-	public void setPrioridad(String prioridad) {
+	public void setPrioridad(int prioridad) {
 		this.prioridad = prioridad;
+	}
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 
 
 
-	@ManyToOne
-	@JoinColumn(name = "id_lista")
-	private Lista lista;
+	public Usuario getCreadaPor() {
+		return creadaPor;
+	}
+
+	public void setCreadaPor(Usuario creadaPor) {
+		this.creadaPor = creadaPor;
+	}
 
 	public Lista getLista() {
 		return lista;
@@ -101,9 +124,16 @@ public class Tarea implements Serializable {
 		this.fechaDeCreacion = fechaDeCreacion;
 	}
 
-//			@JoinColumn(name = "id_tablero", referencedColumnName = "idTablero",
-//					inverseJoinColumns = {
-//						@JoinColumn(name = "id_columna", referencedColumnName = "idColumna") })
-//	private Set<Columna> columnas;
+	//Relaciones entre tablas
+	
+	@ManyToOne
+	@JoinColumn(name = "id_lista")
+	private Lista lista;
+	
+	
+	@ManyToOne
+    @JoinColumn(name = "id_usuario")
+    private Usuario creadaPor;
+
 
 }

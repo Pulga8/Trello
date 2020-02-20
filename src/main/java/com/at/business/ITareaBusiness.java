@@ -7,11 +7,11 @@ import com.at.model.Tarea;
 
 public interface ITareaBusiness {
 
-	public Tarea load(long id) throws BusinessException, NotFoundException;
+	public Tarea load(int id) throws BusinessException, NotFoundException;
 
 	public Tarea add(Tarea tarea) throws BusinessException;
 
-	public void delete(long id) throws BusinessException;
+	public void delete(int id) throws BusinessException;
 
 	public Tarea update(Tarea tarea) throws BusinessException;
 

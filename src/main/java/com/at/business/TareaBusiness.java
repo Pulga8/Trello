@@ -16,7 +16,7 @@ public class TareaBusiness implements ITareaBusiness {
 		private TareaRepository tareaDAO;
 
 		@Override
-		public Tarea load(long id) throws BusinessException, NotFoundException {
+		public Tarea load(int id) throws BusinessException, NotFoundException {
 			Optional<Tarea> o;
 			try {
 				o = tareaDAO.findById(id);
@@ -41,7 +41,7 @@ public class TareaBusiness implements ITareaBusiness {
 		}
 
 		@Override
-		public void delete(long id) throws BusinessException {
+		public void delete(int id) throws BusinessException {
 			try {
 				tareaDAO.deleteById(id);
 			} catch (Exception e) {

@@ -1,4 +1,4 @@
-angular.module('frontrello')
+angular.module('frontend')
 .controller('LoginFormController', 
 function LoginFormController(
 		$rootScope, $scope, $localStorage,
@@ -11,24 +11,57 @@ function LoginFormController(
 	
 	$scope.login = function () {
 		coreService.login($scope.user).then(
-			function(resp){ 
-				if(resp.status===200) {
-					$localStorage.userdata=resp.data;
-					$localStorage.logged=true;
-					//$rootScope.loginData=resp.data;
-					//$rootScope.loggedIn=true;	
+			function (resp) {
+				if (resp.status === 200) {
+					$localStorage.userdata = resp.data;
+					$rootScope.loginData = $localStorage.userdata;
+					$localStorage.logged = true;
 					$rootScope.loginOpen = false;
+					userService.cargarPorUsername($rootScope.loginData.username).then(
+						function (resp) {
+							$window.location.reload();
+							$rootScope.currentLoggedUser = resp.data[0];
+						},
+						function (err) {
+							$rootScope.openErrorModal(err);
+						}
+					);
 					$uibModalInstance.dismiss(true);
-				}else{
-					//$rootScope.loginData=false;
-					//$rootScope.loggedIn=false;	
+				} else {
 					delete $localStorage.userdata;
-					$localStorage.logged=false;
+					$localStorage.logged = false;
 				}
 			},
-			function(respErr){
+			function (respErr) {
 				$log.log(respErr);
 			}
 		);
-	  };  
+	};  
 }); 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

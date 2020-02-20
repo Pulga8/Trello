@@ -18,7 +18,7 @@ public class TableroBusiness implements ITableroBusiness {
 	private TableroRepository tableroDAO;
 	
 	@Override
-	public Tablero load(long id) throws BusinessException, NotFoundException {
+	public Tablero load(int id) throws BusinessException, NotFoundException {
 		Optional<Tablero> o;
 		try {
 			o = tableroDAO.findById(id);
@@ -41,7 +41,7 @@ public class TableroBusiness implements ITableroBusiness {
 	}
 
 	@Override
-	public void delete(long id) throws BusinessException {
+	public void delete(int id) throws BusinessException {
 		try {
 			tableroDAO.deleteById(id);
 		} catch (Exception e) {

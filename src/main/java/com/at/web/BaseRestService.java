@@ -19,25 +19,28 @@ import com.at.model.AuthToken;
 import com.at.model.Usuario;
 
 public class BaseRestService {
+
 	private Logger log = LoggerFactory.getLogger(this.getClass());
+
+	@Autowired
+	private IAuthTokenBusiness authTokenService;
+	@Value("${app.session.token.timeout}")
+	private int sessionTimeout;
 
 	protected Usuario getUserLogged() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		return (Usuario) auth.getPrincipal();
 	}
 
-	@Value("${app.session.token.timeout}")
-	private int sessionTimeout;
-
 	protected JSONObject userToJsonObject(Usuario usuario) {
 		AuthToken token = new AuthToken(sessionTimeout, usuario.getUsername());
-		String tokenValue=null;
+		String tokenValue = null;
 		try {
 			authTokenService.save(token);
-			tokenValue=token.encodeCookieValue();
+			tokenValue = token.encodeCookieValue();
 		} catch (BusinessException e) {
 			log.error(e.getMessage(), e);
-			
+
 		}
 		JSONObject r = new JSONObject();
 		r.put("username", usuario.getUsername());
@@ -45,12 +48,9 @@ public class BaseRestService {
 		r.put("lastname", usuario.getLastName());
 		r.put("email", usuario.getEmail());
 		r.put("roles", usuario.getAuthorities());
-		r.put("authtoken",tokenValue );
+		r.put("authtoken", tokenValue);
 		return r;
 	}
-
-	@Autowired
-	private IAuthTokenBusiness authTokenService;
 
 	protected ResponseEntity<Object> genToken(String username, int diasvalido) {
 		try {
@@ -69,6 +69,7 @@ public class BaseRestService {
 		AuthToken token = new AuthToken(username, c.getTime());
 		authTokenService.save(token);
 		return token;
-
 	}
+
 }
+

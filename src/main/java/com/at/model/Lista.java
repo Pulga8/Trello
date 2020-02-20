@@ -2,7 +2,6 @@ package com.at.model;
 
 import java.io.Serializable;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,8 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "lista")
@@ -22,10 +21,13 @@ public class Lista implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	@Column(length = 150, nullable = false)
-	private String Nombre;
+	@OneToOne
+	@JoinColumn(name = "tipoLista_id",referencedColumnName ="id")
+	private TipoLista tipoLista;
+	
+	
+	
 	@Column(nullable = false)
-	@Size(min = 0, max = 4)
 	private int posicion;
 	
 
@@ -40,16 +42,7 @@ public class Lista implements Serializable {
 		this.id = id;
 	}
 
-	public String getNombre() {
-		return Nombre;
-	}
-
-	public void setNombre(String nombre) {
-		Nombre = nombre;
-	}
 	
-//	@OneToMany(cascade = CascadeType.ALL, mappedBy = "columna")
-//    private List<Tarea> tareas;
 
 	@ManyToOne
     @JoinColumn(name = "id_tablero")
@@ -71,32 +64,18 @@ public class Lista implements Serializable {
 		this.posicion = posicion;
 	}
 
+	public TipoLista getTipoLista() {
+		return tipoLista;
+	}
+
+	public void setTipoLista(TipoLista tipoLista) {
+		this.tipoLista = tipoLista;
+	}
+
 
 	
 	
-	
-	
-	
-	
-	
-	//	@OneToOne(mappedBy = "columna")
-//    private Tarea tarea;
-//	
-//	
-//	@OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "id_columna", referencedColumnName = "idColumna")
-//    private Tablero tablero;
-	
-	
-	
-	
-//	@OneToMany(fetch = FetchType.EAGER)
-//	@JoinTable(name = "columna_tablero", joinColumns = {
-//			@JoinColumn(name = "id_columna", referencedColumnName = "idColumna") }, inverseJoinColumns = {
-//					@JoinColumn(name = "id_tablero", referencedColumnName = "idTablero") })
-//	private Set<Tablero> tableros;
-	
-	
+
 	
 
 }

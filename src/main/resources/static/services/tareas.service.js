@@ -1,4 +1,4 @@
-app=angular.module('frontrello');
+app=angular.module('frontend');
 
 app.service('tareasService',
 function($http, URL_API_BASE){

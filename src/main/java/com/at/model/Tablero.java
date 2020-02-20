@@ -2,6 +2,7 @@ package com.at.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,13 +25,27 @@ import javax.persistence.Table;
 public class Tablero implements Serializable {
 
 	private static final long serialVersionUID = 3414725599827013782L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
+
 	@Column(length = 150, nullable = false)
-	private String Nombre;
+	private String nombre;
+
+	@Column(nullable = false)
+	private int posicion;
+
+	@Column(length = 200, nullable = false)
+	private String fondo;
+
+	@Column(nullable = false)
+	private boolean favorito = false;
+	
+	 private Date fechaCreacion = new Date();
+
+	// Getters and Setters 
+	//Encapsulacion de datos
 
 	public int getId() {
 		return id;
@@ -40,12 +55,14 @@ public class Tablero implements Serializable {
 		this.id = id;
 	}
 
+	
+
 	public String getNombre() {
-		return Nombre;
+		return nombre;
 	}
 
 	public void setNombre(String nombre) {
-		Nombre = nombre;
+		this.nombre = nombre;
 	}
 
 	public Set<Usuario> getMiembros() {
@@ -72,6 +89,41 @@ public class Tablero implements Serializable {
 		this.listas = listas;
 	}
 
+	public int getPosicion() {
+		return posicion;
+	}
+
+	public void setPosicion(int posicion) {
+		this.posicion = posicion;
+	}
+
+	public String getFondo() {
+		return fondo;
+	}
+
+	public void setFondo(String fondo) {
+		this.fondo = fondo;
+	}
+
+	public boolean isFavorito() {
+		return favorito;
+	}
+
+	public void setFavorito(boolean favorito) {
+		this.favorito = favorito;
+	}
+	
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+
+
+	// Relaciones de Tablas
+
 	@ManyToMany
 	@JoinTable(name = "miembros", joinColumns = {
 			@JoinColumn(name = "id_tablero", referencedColumnName = "id") }, inverseJoinColumns = {
@@ -85,4 +137,7 @@ public class Tablero implements Serializable {
 	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "tablero")
 	private List<Lista> listas = new ArrayList<Lista>();
 
+
+
+	
 }

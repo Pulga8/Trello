@@ -1,4 +1,4 @@
-app=angular.module('frontrello');
+app=angular.module('frontend');
 app.controller('MainController',function($scope, $rootScope, $log, graphService, wsService){
 	$scope.graphOptions = {
 			demo : {

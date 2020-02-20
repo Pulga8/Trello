@@ -1,5 +1,6 @@
 package com.at.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.at.business.BusinessException;
 import com.at.business.IUsuarioBusiness;
@@ -23,22 +25,28 @@ import com.at.model.Usuario;
 
 @RestController
 @RequestMapping(Constantes.URL_USUARIOS)
-public class UsuariosRestService extends BaseRestService{
-
+public class UsuariosRestService extends BaseRestService {
 	@Autowired
 	private IUsuarioBusiness usuarioBusiness;
 
 	@GetMapping("")
 	public ResponseEntity<List<Usuario>> list(
-			@RequestParam(required = false, defaultValue = "@*@", value = "q") String parteDelNombre) {
+			@RequestParam(required = false, defaultValue = "@*@", value = "q") String parteDelNombre,
+			@RequestParam(required = false, defaultValue = "@*@", value = "us") String usernameOrEmail) {
 		try {
-			if (parteDelNombre.equals("@*@")) {
+			if (parteDelNombre.equals("@*@") && usernameOrEmail.equals("@*@")) {
 				return new ResponseEntity<List<Usuario>>(usuarioBusiness.list(), HttpStatus.OK);
+			} else if (parteDelNombre.equals("@*@")) {
+				List<Usuario> r = new ArrayList<>();
+				r.add(usuarioBusiness.load(usernameOrEmail));
+				return new ResponseEntity<List<Usuario>>(r, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<List<Usuario>>(usuarioBusiness.list(parteDelNombre), HttpStatus.OK);
 			}
 		} catch (BusinessException e) {
-			return new ResponseEntity<List<Usuario>>(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getLocalizedMessage(), e);
+		} catch (NotFoundException e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -47,9 +55,9 @@ public class UsuariosRestService extends BaseRestService{
 		try {
 			return new ResponseEntity<Usuario>(usuarioBusiness.load(id), HttpStatus.OK);
 		} catch (BusinessException e) {
-			return new ResponseEntity<Usuario>(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getLocalizedMessage(), e);
 		} catch (NotFoundException e) {
-			return new ResponseEntity<Usuario>(HttpStatus.NOT_FOUND);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -57,12 +65,12 @@ public class UsuariosRestService extends BaseRestService{
 	public ResponseEntity<Usuario> add(@RequestBody Usuario usuario) {
 		try {
 			usuarioBusiness.add(usuario);
-			
+
 			HttpHeaders responseHeaders = new HttpHeaders();
 			responseHeaders.set("location", "/usuarios/" + usuario.getIdUser());
 			return new ResponseEntity<Usuario>(responseHeaders, HttpStatus.CREATED);
 		} catch (BusinessException e) {
-			return new ResponseEntity<Usuario>(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -71,7 +79,7 @@ public class UsuariosRestService extends BaseRestService{
 		try {
 			return new ResponseEntity<Usuario>(usuarioBusiness.update(usuario), HttpStatus.OK);
 		} catch (BusinessException e) {
-			return new ResponseEntity<Usuario>(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -81,7 +89,7 @@ public class UsuariosRestService extends BaseRestService{
 			usuarioBusiness.delete(id);
 			return new ResponseEntity<String>(HttpStatus.OK);
 		} catch (BusinessException e) {
-			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getLocalizedMessage(), e);
 		}
 	}
 

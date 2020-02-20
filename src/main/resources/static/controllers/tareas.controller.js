@@ -1,4 +1,4 @@
-app=angular.module('frontrello');
+app=angular.module('frontend');
 app.controller('TareasController',function($scope,tareasService,$log,wsService){
 	
 	tareasService.listar();
